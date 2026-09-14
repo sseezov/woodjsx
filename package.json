@@ -1,26 +1,42 @@
 {
   "name": "woodjsx",
-  "version": "0.7.2",
-  "description": "",
-  "main": "src/index.js",
-  "repository": {
-    "type": "module",
-    "url": "git+https://github.com/sseezov/woodjsx.git"
+  "version": "0.7.3",
+  "description": "A tiny JSX framework built directly on the native DOM, with explicit rendering and a built-in router.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
   },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "patch": "npm version patch && npm publish",
     "minor": "npm version minor && npm publish",
     "major": "npm version major && npm publish"
   },
-  "keywords": [],
-  "author": "",
-  "files": [
-    "src"
+  "keywords": [
+    "jsx",
+    "javascript",
+    "frontend",
+    "framework",
+    "micro-framework",
+    "dom",
+    "native-dom",
+    "vanilla-js",
+    "router",
+    "spa"
   ],
+  "author": "Sergey Sizov",
   "license": "MIT",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/sseezov/wood-js/issues"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sseezov/woodjsx.git"
   },
-  "homepage": "https://github.com/sseezov/wood-js#readme"
+  "bugs": {
+    "url": "https://github.com/sseezov/woodjsx/issues"
+  },
+  "homepage": "https://github.com/sseezov/woodjsx#readme"
 }
