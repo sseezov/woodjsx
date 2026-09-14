@@ -1,111 +1,284 @@
-# woodjsx
+# WoodJSX
 
-**1.6KB** (minified + brotlied) — JSX library with built-in router.
+**A tiny JSX framework built directly on the native DOM.**
+
+WoodJSX lets you build web interfaces with JSX while keeping the browser's
+native DOM model explicit.
+
+No virtual DOM.  
+No hooks.  
+No automatic reactivity.  
+No runtime dependencies.
+
+You decide what gets updated and when.
+
+**~1.6 KB minified + Brotli, including the router.**
+
+## Why WoodJSX?
+
+Most frontend frameworks introduce a runtime that tracks state changes and
+decides when parts of the UI should update.
+
+WoodJSX takes a different approach.
+
+JSX creates real DOM nodes, application state stays ordinary JavaScript,
+and UI updates happen explicitly:
+
+```js
+render('#content', <Content />)
+```
+
+This keeps the rendering model small and predictable while allowing you
+to use the native DOM API whenever it is the simplest solution.
+
+```js
+document.querySelector(...)
+element.classList.add(...)
+element.addEventListener(...)
+```
+
+The DOM is not an escape hatch in WoodJSX — it is the platform WoodJSX
+is built on.
 
 ## Features
 
-- **Super small and dead simple** - read all the source code in a few minutes
-- **Full JSX syntax support** (fragments, children components, JS expressions)
-- **Client-side router** — SPA out of the box
-- **Event handlers** — onClick, onSubmit, onChange, etc
-- **No virtual DOM, no hooks** — intentional choice for simplicity
-- **Zero runtime dependencies** — works with Vite
-- **Async components** — no special hooks, just write `async / await` anywhere you need
-- **Transparent data flow, no magic** — explicit updates, full control
+- JSX components and fragments
+- Real DOM nodes — no Virtual DOM
+- Explicit rendering
+- Built-in client-side router
+- Event delegation
+- Async top-level rendering
+- Zero runtime dependencies
+- Works with Vite
+- Small enough to read the entire runtime source in a few minutes
 
-## Philosophy
+## Installation
 
-Wood.js gives you **full control** over DOM updates. No automatic re-renders, no virtual DOM diffing — just explicit, manual updates when you need them.
+```bash
+npm install woodjsx
+```
 
-- **Manual renders** — call `render(querySelector, component)` when you need to render component, for example on data fetch
-- **Direct DOM access** — full vanilla DOM API available (`querySelector`, `addEventListener`, `classList`, etc.) because you have full control over app rendering
-- **Low-level friendly** — mix JSX with vanilla JS without fighting the framework
-- **No hidden magic** — what you see is what happens
+## Quick Start
 
-## Example: Manual Update
+### `index.html`
+
+```html
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/index.js"></script>
+</body>
+```
+
+### `src/index.js`
+
+```js
+import { initWood } from 'woodjsx'
+import App from './App.jsx'
+
+initWood(App, '#app')
+```
+
+### `src/App.jsx`
 
 ```jsx
-import { render } from '@sseezov/wood-js'
+import { render } from 'woodjsx'
 
-export default function Counter() {
+export default function App() {
   let count = 0
-  
+
   const increment = () => {
     count++
-    render('#counter', count) // manual update
+    render('#counter', count)
   }
-  
+
+  return (
+    <main>
+      <h1>WoodJSX</h1>
+
+      <p>
+        Count: <span id="counter">{count}</span>
+      </p>
+
+      <button onClick={increment}>
+        Increment
+      </button>
+    </main>
+  )
+}
+```
+
+There is no hidden state synchronization here.
+
+`count` is ordinary JavaScript state, and `render()` explicitly updates
+the part of the page that changed.
+
+## Rendering
+
+```jsx
+import { render } from 'woodjsx'
+
+render('#content', <Page />)
+```
+
+`render()` replaces the contents of the selected DOM element.
+
+This makes update boundaries explicit:
+
+```jsx
+render('#toolbar', <Toolbar />)
+render('#schedule', <Schedule />)
+render('#sidebar', <Sidebar />)
+```
+
+You decide how large or small each update should be.
+
+## Components
+
+Components are ordinary functions:
+
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>
+}
+```
+
+Use them like normal JSX components:
+
+```jsx
+<Greeting name="World" />
+```
+
+## Fragments
+
+```jsx
+function UserInfo() {
   return (
     <>
-      <div id="counter">{count}</div>
-      <button onClick={increment}>+</button>
+      <h2>Sergey</h2>
+      <p>Frontend developer</p>
     </>
   )
 }
 ```
 
-## How to start a project?
+## Router
 
-1. Install Vite, setup vite.config as shown below
-2. Create an index.html file, with source script (e.g. "index.js")
-3. Write in index.html:
-
-```html
-<body>
-  <div id="app"></div>
-  <script type="module" src="./index.js"></script>
-</body>
-```
-
-4. Write in index.js:
-
-```javascript
-import { initWood } from './src/core/initWood.js';
-import App from './src/App.jsx';
-
-initWood(App, '#app');
-```
-
-Use routes if you need, similar to React Router:
+WoodJSX includes a small client-side router.
 
 ```jsx
-// App.jsx
-import { Route, Routes } from "./core/router";
-import Layout from "./shared/Layout.jsx";
-import PageA from "./pages/A.jsx";
-import PageB from "./pages/B.jsx";
+import {
+  Route,
+  Routes
+} from 'woodjsx'
 
-export default async function App() {
+import Layout from './Layout.jsx'
+import HomePage from './pages/HomePage.jsx'
+import SettingsPage from './pages/SettingsPage.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
+
+export default function App() {
   return (
     <Layout>
       <Routes mountTo="#main">
-        <Route path="/:appId/a" component={PageA} />
-        <Route path="/:appId/b" component={PageB} />
-        <Route path="*" component={Error} />
+        <Route
+          path="/"
+          component={HomePage}
+        />
+
+        <Route
+          path="/settings"
+          component={SettingsPage}
+        />
+
+        <Route
+          path="*"
+          component={NotFoundPage}
+        />
       </Routes>
     </Layout>
   )
 }
 ```
 
-## Vite Setup
+Navigate programmatically:
 
 ```js
-// vite.config.js
+import { redirect } from 'woodjsx'
+
+redirect('/settings')
+```
+
+## Vite Configuration
+
+```js
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  // ... your config here
   esbuild: {
     jsxFactory: 'h',
-    jsxInject: `import { h, Fragment } from '@sseezov/wood-js'`,
     jsxFragment: 'Fragment',
-    jsx: 'transform',
-    jsxDev: false 
+    jsxInject: `import { h, Fragment } from 'woodjsx'`
   }
 })
 ```
 
-## NPM
+## Philosophy
 
-<https://www.npmjs.com/package/woodjsx>
+WoodJSX is intentionally low-level.
+
+It does not try to hide the DOM or automatically synchronize application
+state with the interface.
+
+The basic model is:
+
+```text
+user action
+    ↓
+change ordinary JavaScript state
+    ↓
+render the part of the UI that changed
+```
+
+This makes application behavior easy to trace and keeps framework runtime
+complexity small.
+
+WoodJSX works particularly well when you want:
+
+- JSX without a large runtime
+- direct access to native browser APIs
+- explicit control over updates
+- predictable rendering behavior
+- a small framework that can be understood by reading its source
+
+WoodJSX may not be the right choice when you specifically want a large
+ecosystem, automatic fine-grained reactivity, server components, or a
+fully managed application runtime.
+
+## Built with WoodJSX
+
+WoodJSX is developed alongside a real production application rather than
+only synthetic examples.
+
+It is currently used to build a scheduling management SaaS with:
+
+- a large administration interface
+- schedule editing
+- optimistic UI updates
+- client-side caching
+- server-injected initial state
+- multiple frontend applications
+- public schedule pages
+- E2E testing
+
+This application is used as the main dogfooding environment for the
+framework.
+
+## Status
+
+WoodJSX is currently under active development and has not reached 1.0 yet.
+
+The API may change while real-world usage continues to shape the framework.
+
+## License
+
+MIT
