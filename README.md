@@ -46,10 +46,8 @@ is built on.
 - Real DOM nodes — no Virtual DOM
 - Explicit rendering
 - Built-in client-side router
-- Event delegation
 - Async top-level rendering
 - Zero runtime dependencies
-- Works with Vite
 - Small enough to read the entire runtime source in a few minutes
 
 ## Installation
@@ -249,29 +247,7 @@ WoodJSX works particularly well when you want:
 - explicit control over updates
 - predictable rendering behavior
 - a small framework that can be understood by reading its source
-
-WoodJSX may not be the right choice when you specifically want a large
-ecosystem, automatic fine-grained reactivity, server components, or a
-fully managed application runtime.
-
-## Built with WoodJSX
-
-WoodJSX is developed alongside a real production application rather than
-only synthetic examples.
-
-It is currently used to build a scheduling management SaaS with:
-
-- a large administration interface
-- schedule editing
-- optimistic UI updates
-- client-side caching
-- server-injected initial state
-- multiple frontend applications
-- public schedule pages
-- E2E testing
-
-This application is used as the main dogfooding environment for the
-framework.
+- super simple, no magic
 
 ## Status
 
