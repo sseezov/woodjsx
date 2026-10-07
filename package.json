@@ -1,6 +1,6 @@
 {
   "name": "woodjsx",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "A tiny JSX framework built directly on the native DOM, with explicit rendering and a built-in router.",
   "type": "module",
   "main": "./src/index.js",
