@@ -21,16 +21,22 @@ export const handlersTypes = Object.keys(registry.handlers);
 
 export function cleanDeadHandlers() {
   const { handlers } = registry;
-  handlersTypes.forEach((type) => {
+  for (const type of handlersTypes) {
     const ids = Object.keys(handlers[type]);
-    const lowerCaseType = type.toLowerCase();
-    ids.forEach((id) => {
-      const element = document.querySelector(`[data-${lowerCaseType}="${id}"]`);
-      if (!element) {
+    if (!ids.length) continue;
+
+    const attribute = `data-${type.toLowerCase()}`;
+    const elements = document.querySelectorAll(`[${attribute}]`);
+    const aliveIds = new Set(
+      Array.from(elements, (element) => element.getAttribute(attribute)),
+    );
+
+    for (const id of ids) {
+      if (!aliveIds.has(id)) {
         delete handlers[type][id];
-      };
-    });
-  });
+      }
+    }
+  }
 }
 
 export const initListeners = () => {
