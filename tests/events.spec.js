@@ -50,3 +50,15 @@ test('SVG handlers work and are removed when their elements are replaced', async
   });
   expect(result).toEqual({ calls: ['circle', 'svg'], attributes: [true, true, '0 0 10 10'], remaining: 0 });
 });
+
+test('a form without onSubmit performs its normal GET navigation', async ({ page }) => {
+  await page.evaluate(async () => {
+    const { h, render } = core;
+    await render('#app', h('form', { action: '/tests/', method: 'get' },
+      h('input', { name: 'message', value: 'hello' }),
+      h('button', { type: 'submit' }, 'Send'),
+    ));
+  });
+  await page.getByRole('button', { name: 'Send' }).click();
+  await expect(page).toHaveURL(/\/tests\/\?message=hello$/, { timeout: 2000 });
+});
