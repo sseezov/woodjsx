@@ -19,21 +19,17 @@ export const registry = {
 
 export const handlersTypes = Object.keys(registry.handlers);
 
-export function cleanDeadHandlers() {
-  const { handlers } = registry;
-  for (const type of handlersTypes) {
-    const ids = Object.keys(handlers[type]);
-    if (!ids.length) continue;
+// Inspect only the old subtree; newly created components may not be mounted yet.
+export function removeHandlers(nodes) {
+  const selector = handlersTypes.map((type) => `[data-${type.toLowerCase()}]`).join(',');
 
-    const attribute = `data-${type.toLowerCase()}`;
-    const elements = document.querySelectorAll(`[${attribute}]`);
-    const aliveIds = new Set(
-      Array.from(elements, (element) => element.getAttribute(attribute)),
-    );
+  for (const node of nodes) {
+    if (node.nodeType !== 1 || node.isConnected) continue;
 
-    for (const id of ids) {
-      if (!aliveIds.has(id)) {
-        delete handlers[type][id];
+    for (const element of [node, ...node.querySelectorAll(selector)]) {
+      for (const type of handlersTypes) {
+        const id = element.getAttribute(`data-${type.toLowerCase()}`);
+        if (id !== null) delete registry.handlers[type][id];
       }
     }
   }

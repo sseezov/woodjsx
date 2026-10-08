@@ -1,5 +1,4 @@
 import { render } from './render.js';
-import { cleanDeadHandlers } from './handlers.js';
 
 export let routes = [];
 
@@ -29,7 +28,6 @@ export const mountRoute = async () => {
   const { pathname } = new URL(href);
   const { component, mountTo } = navigate(pathname);
   await render(mountTo, await component());
-  cleanDeadHandlers();
 };
 
 export const navigateBack = () => {
