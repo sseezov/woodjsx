@@ -114,6 +114,22 @@ The framework includes a [small client-side router](src/router.js).
 `woodjsx`. Route registration components (`Route` and `Routes`) are currently
 only exported by the source module, not the package entry point.
 
+## Tests
+
+Browser tests run in Chromium using Playwright. Set up once:
+
+```sh
+npm ci
+npx playwright install chromium
+```
+
+Run `npm test`, or `npm run test:headed` to see the browser.
+The test server starts and stops automatically; port 4178 must be free.
+Tests cover JSX, events, rendering and handler cleanup, and routing.
+
+Tests and development dependencies are not included in the published package.
+Use `npm pack --dry-run` to inspect its contents without publishing.
+
 ## Status
 
 Under active development, before 1.0. The API may change.
