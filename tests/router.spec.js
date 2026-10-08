@@ -41,3 +41,11 @@ test('redirect, back and refresh handle dynamic routes and async pages', async (
   await expect(page.getByRole('heading')).toHaveText('Home');
   await expect(page).toHaveURL(/\/home$/);
 });
+
+test('package exports register routes that work with public navigation', async ({ page }) => {
+  await page.evaluate(() => fixtures.mountRoutesFromPackage());
+  await expect(page.getByRole('heading')).toHaveText('Home');
+  await page.evaluate(() => core.redirect('/settings'));
+  await expect(page.getByRole('heading')).toHaveText('Settings');
+  await expect(page).toHaveURL(/\/settings$/);
+});

@@ -1,4 +1,4 @@
-import * as wood from '../src/index.js';
+import * as wood from 'woodjsx';
 import * as handlers from '../src/handlers.js';
 import * as router from '../src/router.js';
 
@@ -17,6 +17,14 @@ function Counter() {
 }
 
 window.fixtures = {
+  mountRoutesFromPackage: () => {
+    const { Route, Routes, redirect } = wood;
+    Routes({ mountTo: '#app', children: [
+      Route({ path: '/home', component: () => <h1>Home</h1> }),
+      Route({ path: '/settings', component: () => <h1>Settings</h1> }),
+    ] });
+    redirect('/home');
+  },
   mountCounter: () => render('#app', <Counter />),
   mountComponents: () => render('#app', <>
     <Greeting name="WoodJSX">
