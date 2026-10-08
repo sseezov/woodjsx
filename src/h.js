@@ -1,15 +1,24 @@
 import { handlersTypes, registry } from './handlers';
 
+// Boolean JSX values toggle these attributes; string values are kept as-is.
+const presenceAttributes = new Set([
+  'allowfullscreen', 'async', 'autofocus', 'autoplay', 'checked', 'controls',
+  'default', 'defer', 'disabled', 'formnovalidate', 'inert', 'ismap', 'itemscope',
+  'loop', 'multiple', 'muted', 'nomodule', 'novalidate', 'open', 'playsinline',
+  'readonly', 'required', 'reversed', 'selected', 'capture', 'download', 'hidden',
+]);
+
 const setProps = (element, props) => {
   Object.entries(props).forEach(([key, value]) => {
     if (handlersTypes.includes(key)) { // сетаем обработчик
       const handlerId = registry.registerHandler(key, value);
-      element.setAttribute(`data-${key}`, handlerId);
+      element.setAttribute(`data-${key.toLowerCase()}`, handlerId);
     }
-    else { // сетаем аттрибут, если значение truthy
-      if (value) {
-        element.setAttribute(key, value);
-      }
+    else {
+      if (value === null || value === undefined) return;
+      const isPresenceAttribute = presenceAttributes.has(key.toLowerCase());
+      if (isPresenceAttribute && value === false) return;
+      element.setAttribute(key, isPresenceAttribute && value === true ? '' : value);
     }
   });
 };

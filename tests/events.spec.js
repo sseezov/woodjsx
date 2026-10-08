@@ -34,3 +34,19 @@ for (const [prop, type, tag] of events) {
     expect(result.prevented).toBe(['submit', 'contextmenu'].includes(type));
   });
 }
+
+test('SVG handlers work and are removed when their elements are replaced', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const { h, render, registry } = core;
+    const calls = [];
+    const circle = h('circle', { onClick: () => calls.push('circle') });
+    const svg = h('svg', { viewBox: '0 0 10 10', onClick: () => calls.push('svg') }, circle);
+    await render('#app', svg);
+    circle.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    svg.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    const attributes = [svg.hasAttribute('data-onclick'), circle.hasAttribute('data-onclick'), svg.getAttribute('viewBox')];
+    await render('#app', 'Empty');
+    return { calls, attributes, remaining: Object.keys(registry.handlers.onClick).length };
+  });
+  expect(result).toEqual({ calls: ['circle', 'svg'], attributes: [true, true, '0 0 10 10'], remaining: 0 });
+});

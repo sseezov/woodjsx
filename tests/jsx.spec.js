@@ -5,7 +5,7 @@ test('JSX creates components, fragments, attributes, arrays and SVG', async ({ p
   await expect(page.getByRole('heading')).toHaveText('Hello WoodJSX');
   await expect(page.locator('section')).toHaveClass('greeting');
   await expect(page.getByRole('textbox', { name: 'Name' })).toBeEnabled();
-  await expect(page.getByRole('textbox', { name: 'Name' })).toHaveAttribute('required', 'true');
+  await expect(page.getByRole('textbox', { name: 'Name' })).toHaveAttribute('required');
   await expect(page.locator('p')).toHaveText(['1', '2']);
   await expect(page.locator('p').last()).toHaveAttribute('data-number', '2');
   expect(await page.locator('#app').evaluate(element => element.children.length)).toBe(2);
