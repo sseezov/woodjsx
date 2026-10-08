@@ -116,9 +116,17 @@ including `aria-*`, `data-*`, and `contenteditable`, keep `false` as `"false"`.
 ## Router
 
 The framework includes a [small client-side router](src/router.js).
-`redirect(path)`, `navigateBack()`, and `refreshPage()` are exported from
-`woodjsx`. Route registration components (`Route` and `Routes`) are currently
-only exported by the source module, not the package entry point.
+Import route components and navigation helpers directly from the package:
+
+```js
+import { Route, Routes, redirect, navigateBack, refreshPage } from 'woodjsx'
+```
+
+`Routes` registers its `Route` children with a shared `mountTo` selector.
+Each `Route` takes a `path` and a `component`. Register routes while creating
+`App`; `initWood` mounts the matching page after the app layout is in the DOM.
+Use `redirect(path)` to navigate, `navigateBack()` to go back, and
+`refreshPage()` to render the current route again.
 
 ## Tests
 
