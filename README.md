@@ -107,6 +107,12 @@ Components accept props and can return fragments (`<>...</>`). JSX uses
 HTML attributes such as `class`. For conditional content, use
 `condition ? <Content /> : ''`: values such as `false` and `null` become text.
 
+Attribute values `0` and `''` are preserved; `null` and `undefined` omit the
+attribute. Boolean values toggle presence attributes such as `disabled`,
+`checked`, `hidden`, `download`, and `capture`: `false` omits the attribute and
+`true` sets an empty value. String values are preserved. Other attributes,
+including `aria-*`, `data-*`, and `contenteditable`, keep `false` as `"false"`.
+
 ## Router
 
 The framework includes a [small client-side router](src/router.js).
