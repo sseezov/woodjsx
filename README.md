@@ -8,6 +8,18 @@ when to update the UI by calling `render()` or using the DOM API directly.
 
 ## Quick start
 
+Create a project from [woodjsx-template](https://github.com/sseezov/woodjsx-template),
+install dependencies, and start the dev server:
+
+```sh
+npx --yes degit sseezov/woodjsx-template my-app && cd my-app && npm install && npm run dev
+```
+
+Replace `my-app` with your project directory name. `degit` downloads the template
+without its Git history, so there is no `.git` directory to remove.
+
+## Manual setup
+
 Install WoodJSX and Vite in your project:
 
 ```sh
