@@ -49,9 +49,9 @@ export const initListeners = () => {
 
   const handleSubmit = (e) => {
     const { onsubmit } = e.target.dataset;
-    e.preventDefault();
 
     if (handlers.onSubmit[onsubmit]) {
+      e.preventDefault();
       handlers.onSubmit[onsubmit](e);
     }
   };
