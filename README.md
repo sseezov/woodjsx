@@ -140,6 +140,32 @@ Each `Route` takes a `path` and a `component`. Register routes while creating
 Use `redirect(path)` to navigate, `navigateBack()` to go back, and
 `refreshPage()` to render the current route again.
 
+### Missing pages and errors
+
+Use `path="*"` for unknown URLs. It is checked after all regular routes,
+regardless of where it appears in the list.
+
+```jsx
+<Routes mountTo="#page" errorComponent={PageError}>
+  <Route path="/" component={HomePage} />
+  <Route path="/lessons/:id" component={LessonsPage} errorComponent={LessonsError} />
+  <Route path="*" component={NotFoundPage} />
+</Routes>
+
+function PageError({ error }) {
+  return <p role="alert">Could not open this page: {error.message}</p>
+}
+```
+
+If creating or rendering a page fails, its `errorComponent` receives `{ error }`.
+A route's error component takes precedence over the one on `Routes`.
+Both page and error components may be async. Errors in later event handlers
+or detached async operations are not caught by the router.
+
+Without an error component, the error propagates. Errors from the error component
+also propagate. An unknown URL without a `*` route throws a descriptive error.
+`redirect()` and `refreshPage()` return the promise for mounting the page.
+
 ## Tests
 
 Browser tests run in Chromium using Playwright. Set up once:
